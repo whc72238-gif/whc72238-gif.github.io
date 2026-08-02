@@ -55,7 +55,12 @@
 </div>
 
 <nav class="links">
-  <a class="link primary" href="https://apps.apple.com/kr/app/id6791676098">
+  <!-- 🚨 App Store 를 직접 가리키지 않는다 — 인스타 인앱 브라우저가 apps.apple.com 이동을
+       막아 **탭해도 아무 일도 안 일어난다**(2026-08-02 대표 실측: 같은 페이지의 구글 폼·인스타
+       링크는 정상 이동, App Store 만 무반응 → 목적지가 원인이고 우리 마크업은 결백).
+       `/ios/` 는 같은 도메인이라 막히지 않고, 그 페이지가 스크립트로 넘긴다.
+       ⚠️ 되돌리지 말 것 — 인스타 프로필이 사실상 유일한 유입 경로다 -->
+  <a class="link primary" href="/ios/">
     <span class="ico">🍎</span>
     <span>App Store에서 다운로드<span class="sub">iPhone · 무료</span></span>
   </a>
