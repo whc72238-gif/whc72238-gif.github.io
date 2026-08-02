@@ -30,6 +30,10 @@
   .link .ico { font-size: 19px; line-height: 1; }
   .link .sub { display: block; font-size: 12.5px; color: var(--muted); font-weight: 400; }
   .link.primary .sub { color: #a39a85; }
+  /* 인앱 브라우저 안내 — 인스타에서 들어온 사람에게만 보인다(문서 하단 스크립트) */
+  [hidden] { display: none; }
+  .iab-note { margin: -4px 0 14px; font-size: 13px; line-height: 1.65; color: var(--muted); }
+  .iab-note b { color: var(--ink); }
   main { max-width: 680px; margin: 0 auto; padding: 8px 22px 64px; }
   h2 { font-size: 20px; margin-top: 40px; color: var(--ink); }
   .lead { font-size: 17px; }
@@ -44,6 +48,8 @@
     .link { background: #221f1c; border-color: #3a3630; }
     .link.primary { background: #e8c87a; border-color: #e8c87a; color: #1a1816; }
     .link.primary .sub { color: #6b5a30; }
+    .iab-note { color: #a39a85; }
+    .iab-note b { color: #e8e2d8; }
   }
 </style>
 </head>
@@ -65,6 +71,8 @@
     <span class="ico">🍎</span>
     <span>App Store에서 다운로드<span class="sub">iPhone · 무료</span></span>
   </a>
+  <p class="iab-note" id="iabNote" hidden>인스타그램 안에서는 App Store가 바로 열리지 않아요.<br>
+  버튼을 길게 눌러 <b>[링크 열기]</b> 를 선택하시거나, App Store에서 <b>낙서장씨</b> 를 검색해 주세요</p>
   <span class="link soon">
     <span class="ico">🤖</span>
     <span>Google Play<span class="sub">Android 준비 중이에요</span></span>
@@ -105,5 +113,24 @@
     <p>만든 곳: W.H. Studio · 문의: <a href="mailto:whc72238@gmail.com">whc72238@gmail.com</a></p>
   </footer>
 </main>
+
+<script>
+  /* 🚨 인스타·페이스북 인앱 브라우저는 유니버설 링크에 필요한 API 를 구현하지 않는다.
+     그래서 App Store 링크를 **탭해도 아무 일도 안 일어난다** (2026-08-02 대표 실측).
+     경유 페이지·스크립트 이동·x-safari-https 전부 막힌 것을 확인했고, 우리가 고칠 수
+     있는 자리가 아니다 → 빠져나가는 법을 알려주는 것이 유일한 수단이다.
+
+     🔑 길게 눌러 [링크 열기] 는 **실제로 App Store 앱까지 열린다**(실측). 인스타가
+     가로채는 것은 주소가 아니라 "링크를 눌렀다"는 사건이고, 웹뷰 자체 메뉴는 그 검문을
+     지나지 않기 때문이다.
+
+     📌 인스타에서 온 사람에게만 보인다 — 나머지는 그냥 눌러도 잘 되는데 "길게
+     누르세요"가 붙으면 앱이 이상해 보인다. 실패해도 안내가 안 뜰 뿐이라 무해하다. */
+  try {
+    if (/Instagram/i.test(navigator.userAgent)) {
+      document.getElementById('iabNote').hidden = false;
+    }
+  } catch (e) {}
+</script>
 </body>
 </html>
