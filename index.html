@@ -73,10 +73,13 @@
   </a>
   <p class="iab-note" id="iabNote" hidden>인스타그램 안에서는 App Store가 바로 열리지 않아요.<br>
   버튼을 길게 눌러 <b>[링크 열기]</b> 를 선택하시거나, App Store에서 <b>낙서장씨</b> 를 검색해 주세요</p>
-  <span class="link soon">
+  <!-- 📌 2026-08-03 Android 프로덕션 출시로 활성화. 여기도 **직링크**다 —
+       `/android/` 경유는 App Store 때와 같은 이유로 아무도 못 돕는다(위 주석 참조).
+       `/android/` 페이지는 단축 링크 자산으로 존치하되 리디렉트로 전환해뒀다. -->
+  <a class="link" href="https://play.google.com/store/apps/details?id=com.nakseojangssi.app">
     <span class="ico">🤖</span>
-    <span>Google Play<span class="sub">Android 준비 중이에요</span></span>
-  </span>
+    <span>Google Play에서 다운로드<span class="sub">Android · 무료</span></span>
+  </a>
   <a class="link" href="https://docs.google.com/forms/d/e/1FAIpQLSfKwbEwBjkEZrDXp4shOHk9PxiJHLWXNeMuMZbXjQfdczfKag/viewform">
     <span class="ico">✉️</span>
     <span>의견 보내기<span class="sub">불편한 점, 바라는 기능을 알려주세요</span></span>
@@ -126,8 +129,14 @@
 
      📌 인스타에서 온 사람에게만 보인다 — 나머지는 그냥 눌러도 잘 되는데 "길게
      누르세요"가 붙으면 앱이 이상해 보인다. 실패해도 안내가 안 뜰 뿐이라 무해하다. */
+  /* 🚨 **iOS 에서만 띄운다** (2026-08-03 수정). 종전에는 `Instagram` 만 보고 띄웠는데,
+     안드로이드 인스타에서도 걸려 **"App Store 에서 낙서장씨를 검색해 주세요"** 가 떴다.
+     안드 사용자에게 틀린 안내다 — 안드 출시로 그 사용자가 실제로 오기 시작한다.
+     📌 Play 링크가 안드 인앱 브라우저에서 막히는지는 **측정한 적이 없다.**
+        측정 전에는 경고를 띄우지 않는다 — 없는 문제를 만들지 않기 위해서다. */
   try {
-    if (/Instagram/i.test(navigator.userAgent)) {
+    var ua = navigator.userAgent;
+    if (/Instagram/i.test(ua) && /iPhone|iPad|iPod/i.test(ua)) {
       document.getElementById('iabNote').hidden = false;
     }
   } catch (e) {}
