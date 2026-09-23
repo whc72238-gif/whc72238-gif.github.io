@@ -179,8 +179,8 @@
                → Play Console 획득 보고서 「추적 채널(UTM)」 -->
           <a class="google" href="https://play.google.com/store/apps/details?id=com.nakseojangssi.app&referrer=utm_source%3Dnakseojangssi.com%26utm_medium%3Dsite%26utm_campaign%3Dhero"><img src="badges/google-play-ko.png" width="186" height="72" alt="Google Play에서 다운로드"></a>
         </div>
-        <p class="iab-note" id="iabNote" hidden>인스타그램 안에서는 App Store가 바로 열리지 않아요.<br>
-          버튼을 길게 눌러 <b>[링크 열기]</b>를 선택하시거나, App Store에서 <b>낙서장씨</b>를 검색해 주세요</p>
+        <p class="iab-note" id="iabNote" hidden>링크가 열리지 않으면<br>
+          길게 눌러 <b>[링크 열기]</b>를 선택하시거나, App Store에서 <b>낙서장씨</b>를 검색해 주세요.</p>
       </div>
       <figure class="phone">
         <picture>
@@ -309,7 +309,10 @@
      가로채는 것은 주소가 아니라 "링크를 눌렀다"는 사건이고, 웹뷰 자체 메뉴는 그 검문을
      지나지 않기 때문이다.
      🚨 **iOS 에서만 띄운다** (2026-08-03). 안드로이드 인스타는 열린다(대표 안드폰 실측) — 안드에 경고를 붙이면 없는 문제를 만든다.
-     ✅ **스레드는 전부 열린다** (2026-08-03 대표 실측) — UA 검사에 Threads 를 넣지 말 것. */
+     ✅ **스레드는 전부 열린다** (2026-08-03 대표 실측) — UA 검사에 Threads 를 넣지 말 것.
+     🔄 **2026-09-23 대표 실측 — 아이폰 인스타 앱 안에서 App Store 배지 탭 → 바로 열렸다** (8/2 와 반대. 인스타 웹뷰가 바뀐 것으로 보인다).
+        그래서 첫 문장을 단정형(「바로 열리지 않아요」)에서 **조건형(「링크가 열리지 않으면」)** 으로 바꿨다 — 열리는 사람에게 틀린 말을 안 한다.
+        표시 조건(iOS+인스타 UA)은 그대로: 여전히 안 열리는 기기·버전이 있을 수 있고, 조건형이라 열려도 무해하다. */
   try {
     var ua = navigator.userAgent;
     if (/Instagram/i.test(ua) && /iPhone|iPad|iPod/i.test(ua)) {
