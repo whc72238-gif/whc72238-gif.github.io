@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<!-- 🆕 메타 광고 도착 페이지 /m/ (개발 발주 21 · 2026-11-15 · 대표 11/15 PM 세션 「한 주 미루기」 — R1 11/24 ~ 26).
+     메타 트래픽 목표는 App Store 링크를 도착 주소로 못 쓴다(#1487810) → 광고는 이 페이지로 오고, 여기 App Store 단추가 ASC 캠페인 링크다.
+     쓰는 주소: R1 = /m/?ct=meta-r1 · R2 = /m/?ct=meta-r2 (ct 가 아래 목록에 없으면 첫 화면과 같은 링크 — 캠페인으로 안 센다).
+     🔑 내용은 첫 화면(index.html)과 같다 — 다른 곳은 여섯뿐: ① noindex ② canonical 뺌 ③ 스마트 배너(apple-itunes-app) 뺌
+        (사파리에서 배너로 받으면 캠페인으로 안 셈 · 인앱 브라우저엔 원래 안 뜸) ④ 상대 경로 → 절대 경로(img · badges · privacy-policy.html)
+        ⑤ App Store 단추에 id="appStoreLink" ⑥ 맨 아래 ct 스크립트. 🚨 첫 화면 글을 바꾸면 이 페이지도 같이 맞출 것(복사본이다).
+     🚨 바로 넘기기(meta refresh · location.replace — /ios/ 꼴)는 쓰지 않는다: 메타가 최종 주소를 App Store 로 보면 같은 거절이 날 수 있다.
+     어디에서도 링크하지 않는다(광고 전용). -->
+<meta name="google-site-verification" content="0X4TlNfP-RGJ3i4lpMuJiETN18J0Uo2jd3NPESueA8w" />
+<!-- P1 한국어 개편 (2026-09-23, 대표 승인) — 설계서 docs/web-redesign.md(앱 리포) · 프로토타입 docs/web-redesign/index.html 구조 그대로.
+     뺀 것: 「가격」 칸과 도움말 「프리미엄은 구독인가요?」(대표 9/23 — 월 구독 검토 중이라 「한 번만 결제돼요」가 틀린 말이 될 수 있다) · 사업자 정보(보류 §11).
+     문구는 전부 기존 확정 문장(스토어 설명·바이오·방침·튜토리얼)과 설계서 §5 확정본 — 새 문장 0.
+     🚨 §7 경로 유지: / · privacy-policy.html · version.json(형식 불변) · app-ads.txt · 구글 인증 파일 · /ios/ /android/ · CNAME. -->
+<title>낙서장씨 — 하루 한 줄 일기 앱</title>
+<meta name="description" content="하루 한 줄이면 충분해요. 회원가입 없이 열자마자 쓰고, 기록은 내 폰에만 남아요. 막막한 날엔 오늘의 주제가 거들고, 쉬는 날엔 쉼표가 기록을 대신 이어줘요.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="낙서장씨">
+<meta property="og:title" content="낙서장씨 — 하루 한 줄 일기 앱">
+<meta property="og:description" content="하루 한 줄이면 충분해요. 회원가입 없이, 기록은 내 폰에만.">
+<meta property="og:image" content="https://nakseojangssi.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1816" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!-- 서체: 제목 고운바탕 · 본문 고운돋움 · 쉼표 Playfair 900(text=, 로 쉼표 한 글자만). 한글은 unicode-range 조각이라 쓰인 글자만 받는다(§4-8) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&text=%2C&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#f5f1e8; --paper:#fffdf7; --ink:#1f1d1a; --text:#2b2722; --muted:#6b6559; --faint:#a39c8e;
+    --line:#e8e0cf; --gold:#c89b3c; --knot-bg:#faf2dd; --knot-line:rgba(200,155,60,.55);
+    --shadow:0 1px 0 rgba(31,29,26,.04), 0 22px 44px -26px rgba(74,56,24,.38);
+    --serif:"Gowun Batang", "AppleMyungjo", serif; --sans:"Gowun Dodum", -apple-system, "Apple SD Gothic Neo", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1a1816; --paper:#221f1c; --ink:#ece6da; --text:#e8e2d8; --muted:#a39a85; --faint:#7d7466;
+            --line:#34302a; --gold:#e8c87a; --knot-bg:#26221a; --knot-line:rgba(232,200,122,.5);
+            --shadow:0 22px 44px -26px rgba(0,0,0,.7); }
+  }
+  * { box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); font-size:16px; line-height:1.75;
+         word-break:keep-all; overflow-wrap:break-word; }
+  img { display:block; max-width:100%; height:auto; }
+  /* 링크: 먹색 글자 + 금색 밑줄(대비 14.9:1, §4-7). 금색은 선·점·쉼표에만 */
+  a { color:inherit; }
+  .textlink { color:var(--ink); text-decoration:underline; text-decoration-color:var(--gold); text-decoration-thickness:1.5px;
+              text-underline-offset:4px; }
+  a:focus-visible, summary:focus-visible { outline:2px solid var(--gold); outline-offset:3px; border-radius:4px; }
+  .wrap { max-width:1080px; margin:0 auto; padding:0 22px; }
+  .comma { font-family:"Playfair Display", Georgia, serif; font-weight:900; color:var(--gold); line-height:1; }
+
+  /* 상단 — 브랜드 표지 하나, 오른쪽에 도움말 */
+  .top { display:flex; align-items:center; justify-content:space-between; padding:18px 0 0; }
+  .brand { display:flex; align-items:baseline; gap:1px; text-decoration:none; }
+  .brand .comma { font-size:26px; }
+  .brand b { font-family:var(--serif); font-weight:700; font-size:18px; color:var(--ink); letter-spacing:-.01em; }
+  .top nav a { font-size:14px; color:var(--muted); text-decoration:none; padding:8px 0 8px 12px; }
+
+  /* 첫 화면 — 한 문장 · 사실 셋 · 스토어 둘 · 실제 화면 */
+  .hero { display:grid; gap:0; padding:40px 0 0; }
+  .eyebrow { margin:0 0 10px; font-size:15px; color:var(--muted); }
+  h1 { margin:0; font-family:var(--serif); font-weight:700; color:var(--ink); font-size:clamp(36px, 10vw, 60px);
+       line-height:1.28; letter-spacing:-.02em; }
+  .facts { margin:16px 0 0; font-size:15px; color:var(--muted); }
+  .facts span + span::before { content:"·"; margin:0 .5em; color:var(--faint); }
+  /* 공식 배지(§4-3) — 애플 SVG(ko-kr)·구글 PNG(ko). 구글 배지는 파일 안에 여백이 있어 높이를 더 줘야 눈높이가 맞는다 */
+  .stores { display:flex; flex-wrap:wrap; align-items:center; gap:4px 12px; margin:28px 0 0; }
+  .stores a { display:inline-block; line-height:0; }
+  .stores .apple img { height:48px; width:auto; }
+  .stores .google img { height:72px; width:auto; margin:-12px; }
+  .iab-note { margin:14px 0 0; padding:12px 14px; border-radius:12px; background:var(--paper); border:1px solid var(--line);
+              font-size:13.5px; line-height:1.65; color:var(--muted); max-width:420px; }
+  .iab-note b { color:var(--ink); font-weight:700; }
+  [hidden] { display:none !important; }
+  .phone { margin:44px auto 0; width:min(68%, 300px); border-radius:44px; padding:9px; background:#1f1d1a;
+           box-shadow:var(--shadow); }
+  .phone img { border-radius:36px; }
+  @media (prefers-color-scheme: dark) { .phone { background:#2d2923; } }
+
+  /* 금빛 실 — 섹션을 꿰는 한 줄. 쓴 날 = 매듭(점), 쉰 날 = 쉼표 매듭. 앱 달력의 말 그대로 */
+  .days { margin:88px 0 0; }
+  .section-kicker { margin:0 0 6px; font-size:14px; color:var(--muted); }
+  h2 { margin:0; font-family:var(--serif); font-weight:700; color:var(--ink); font-size:clamp(26px, 6.6vw, 38px);
+       line-height:1.35; letter-spacing:-.015em; }
+  .thread { list-style:none; margin:40px 0 0; padding:0 0 0 30px; position:relative; }
+  .thread::before { content:""; position:absolute; left:7px; top:12px; bottom:0; width:2px; background:var(--gold);
+                    border-radius:2px; }
+  .day { position:relative; padding:0 0 56px; }
+  .day:last-child { padding-bottom:0; }
+  .knot { position:absolute; left:-29px; top:9px; width:14px; height:14px; border-radius:50%; background:var(--gold); }
+  .knot.rest { left:-35px; top:3px; width:26px; height:26px; background:var(--knot-bg); border:1.5px solid var(--knot-line);
+               display:grid; place-items:center; }
+  .knot.rest .comma { font-size:22px; transform:translateY(-4px); }
+  h3 { margin:0 0 8px; font-family:var(--serif); font-weight:700; font-size:22px; color:var(--ink); line-height:1.4; }
+  .day p { margin:0; color:var(--text); }
+  .day p + p { margin-top:6px; }
+  .note { color:var(--muted); font-size:15px; }
+  .shot { margin:22px 0 0; border-radius:22px; overflow:hidden; background:var(--paper); box-shadow:var(--shadow);
+          border:1px solid var(--line); max-width:460px; }
+
+  /* 믿을 이유 — 서버 없음 */
+  .trust { margin:96px 0 0; padding:34px 26px; border-radius:26px; background:var(--paper); border:1px solid var(--line); }
+  .trust ul { list-style:none; margin:22px 0 0; padding:0; display:grid; gap:16px; }
+  .trust li { padding-left:22px; position:relative; }
+  .trust li::before { content:""; position:absolute; left:2px; top:.72em; width:8px; height:8px; border-radius:50%; background:var(--gold); }
+  .trust b { color:var(--ink); }
+  .trust .more { display:inline-block; margin-top:22px; font-size:15px; }
+
+  /* 이미 쓰는 사람 — 링크 허브의 나머지 */
+  .together { margin:96px 0 0; }
+  .rows { margin:22px 0 0; border-top:1px solid var(--line); }
+  .row { display:grid; grid-template-columns:28px 1fr 16px; align-items:center; gap:14px; padding:16px 2px;
+         border-bottom:1px solid var(--line); text-decoration:none; }
+  .row svg { width:24px; height:24px; stroke:var(--gold); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+  .row span { font-size:16.5px; color:var(--ink); line-height:1.45; }
+  .row small { display:block; font-size:13.5px; color:var(--muted); }
+  .row i { font-style:normal; color:var(--faint); }
+
+  /* 도움말 — <details> 라 JS 없이 펼쳐진다 */
+  .help { margin:96px 0 0; }
+  .help details { border-bottom:1px solid var(--line); }
+  .help details:first-of-type { border-top:1px solid var(--line); margin-top:22px; }
+  .help summary { list-style:none; cursor:pointer; padding:17px 30px 17px 0; position:relative; font-size:16.5px; color:var(--ink); }
+  .help summary::-webkit-details-marker { display:none; }
+  .help summary::after { content:"+"; position:absolute; right:4px; top:14px; font-size:20px; color:var(--gold); }
+  .help details[open] summary::after { content:"–"; }
+  .help details p { margin:0 0 18px; color:var(--text); font-size:15.5px; }
+  .help details b { color:var(--ink); }
+  .help details ol { margin:0 0 14px; padding-left:1.3em; color:var(--text); font-size:15.5px; }
+  .help details li { margin:0 0 8px; padding-left:.2em; }
+  .help details li::marker { color:var(--gold); }
+
+  /* 바닥 */
+  footer { margin:110px 0 0; padding:40px 0 56px; border-top:1px solid var(--line); text-align:center; }
+  footer .comma { font-size:44px; }
+  footer .line { margin:6px 0 0; font-family:var(--serif); color:var(--ink); }
+  footer .links { margin:18px 0 0; font-size:14px; color:var(--muted); display:flex; justify-content:center; flex-wrap:wrap; gap:6px 16px; }
+  footer .biz { margin:18px 0 0; font-size:12.5px; line-height:1.8; color:var(--faint); }
+
+  /* 넓은 화면 — 첫 화면 두 단, 금빛 실 옆에 화면 */
+  @media (min-width: 900px) {
+    .top { padding-top:28px; }
+    .hero { grid-template-columns:1.1fr .9fr; align-items:center; gap:40px; padding-top:70px; }
+    .phone { margin:0 auto; width:320px; }
+    .days { margin-top:130px; }
+    .day { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; padding-bottom:90px; }
+    .shot { margin:0; }
+    .trust { padding:52px 56px; margin-top:120px; }
+    .trust ul { grid-template-columns:repeat(2,1fr); gap:36px; }
+    .together, .help { margin-top:120px; }
+    .rows { display:grid; grid-template-columns:1fr 1fr; column-gap:40px; }
+    .help-grid { display:grid; grid-template-columns:.8fr 1.2fr; gap:56px; }
+    .help details:first-of-type { margin-top:0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/" aria-label="낙서장씨 처음으로"><b>낙서장씨</b><span class="comma" aria-hidden="true">,</span></a>
+    <nav><a href="#help">도움말</a></nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">쓰다 만 일기장이 몇 권인가요?</p>
+        <h1>하루 한 줄이면<br>충분해요</h1>
+        <p class="facts"><span>무료</span><span>회원가입 없이</span><span>기록은 내 폰에만</span></p>
+        <div class="stores">
+          <!-- 📌 App Store 직링크 (2026-08-02 원복) — 인스타 인앱 브라우저에서는 경유해도 똑같이 막힌다(실측). /ios/ 는 단축 링크로 존치.
+               App Store 캠페인 링크(pt=제공자 토큰&ct=site-hero, §6)는 토큰이 대표 손이라 받을 때까지 평소 링크 -->
+          <a class="apple" id="appStoreLink" href="https://apps.apple.com/kr/app/id6791676098"><img src="/badges/app-store-ko.svg" width="156" height="48" alt="App Store에서 다운로드하기"></a>
+          <!-- 📌 Play 직링크 (2026-08-03 출시) + 캠페인 표지(§6): utm_source=nakseojangssi.com · medium=site · campaign=hero
+               → Play Console 획득 보고서 「추적 채널(UTM)」 -->
+          <a class="google" href="https://play.google.com/store/apps/details?id=com.nakseojangssi.app&referrer=utm_source%3Dnakseojangssi.com%26utm_medium%3Dsite%26utm_campaign%3Dhero"><img src="/badges/google-play-ko.png" width="186" height="72" alt="Google Play에서 다운로드"></a>
+        </div>
+        <p class="iab-note" id="iabNote" hidden>링크가 열리지 않으면<br>
+          길게 눌러 <b>[링크 열기]</b>를 선택하시거나, App Store에서 <b>낙서장씨</b>를 검색해 주세요.</p>
+      </div>
+      <figure class="phone">
+        <picture>
+          <source srcset="/img/phone-home-dark.webp" media="(prefers-color-scheme: dark)">
+          <img src="/img/phone-home.webp" width="660" height="1434" fetchpriority="high"
+               alt="낙서장씨 홈 화면 — 연속 기록 41일째, 오늘의 주제 「요즘 나를 지치게 하는 건 무엇인가요?」와 쓰기 시작 버튼">
+        </picture>
+      </figure>
+    </section>
+
+    <section class="days" aria-labelledby="days-title">
+      <p class="section-kicker">낙서장씨는 이렇게 이어져요</p>
+      <h2 id="days-title">한 줄씩, 쉬어가며,<br>금빛 실로</h2>
+      <ol class="thread">
+        <li class="day">
+          <span class="knot" aria-hidden="true"></span>
+          <div>
+            <h3>하루 한 줄</h3>
+            <p>오늘은 딱 한 문장이면 됩니다. 사진 한 장을 곁들여도 좋아요.</p>
+            <p class="note">무엇을 쓸지 막막한 날엔 오늘의 주제와 단어가 살짝 거들어 드립니다.</p>
+          </div>
+          <figure class="shot"><img src="/img/crop-write.webp" width="720" height="442" loading="lazy"
+            alt="쓰기 화면 — 오늘의 주제 아래 두 줄의 글"></figure>
+        </li>
+        <li class="day">
+          <span class="knot rest" aria-hidden="true"><span class="comma">,</span></span>
+          <div>
+            <h3>이어지는 기록, 쉼표</h3>
+            <p>매일 쓰면 연속 기록이 쌓이고, 7일마다 “쉼표”를 하나 얻습니다.</p>
+            <p>하루쯤 건너뛰어도 쉼표가 기록을 대신 이어줘요.</p>
+            <p class="note">일기는 완벽함이 아니라 꾸준함이니까요.</p>
+          </div>
+          <figure class="shot"><picture>
+            <source srcset="/img/crop-streak-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="/img/crop-streak.webp" width="720" height="327" loading="lazy" alt="연속 기록 카드 — 41일째, 쉼표 1개"></picture></figure>
+        </li>
+        <li class="day">
+          <span class="knot" aria-hidden="true"></span>
+          <div>
+            <h3>달력에 쌓이는 나의 시간</h3>
+            <p>작성한 날들이 달력 위에 금빛 실로 이어집니다.</p>
+            <p class="note">한 달을 돌아보면, 한 줄들이 모여 꽤 근사한 이야기가 되어 있을 거예요.</p>
+          </div>
+          <figure class="shot"><picture>
+            <source srcset="/img/crop-calendar-dark.webp" media="(prefers-color-scheme: dark)">
+            <img src="/img/crop-calendar.webp" width="720" height="807" loading="lazy"
+                 alt="기록 달력 — 쓴 날은 금빛 실로 이어지고, 쉼표를 쓴 날은 쉼표 표시"></picture></figure>
+        </li>
+      </ol>
+    </section>
+
+    <section class="trust" aria-labelledby="trust-title">
+      <p class="section-kicker">내 기록은 내 기기에만</p>
+      <h2 id="trust-title">서버도, 회원가입도<br>없습니다</h2>
+      <ul>
+        <li><b>모든 기록은 휴대폰 안에만</b> 저장됩니다. 개발자를 포함한 누구도 볼 수 없어요.</li>
+        <li><b>구글 드라이브 백업(선택)</b>으로 기기를 바꿔도 글과 사진을 옮길 수 있어요. 내 계정의 앱 전용 공간에만 저장됩니다.</li>
+        <!-- 광고 줄은 없다(대표 9/23 「크게 이야기할 필요 없다」) — 도움말 「광고는 언제 나오나요?」가 받는다 -->
+      </ul>
+      <a class="textlink more" href="/privacy-policy.html">개인정보처리방침 전문</a>
+    </section>
+
+    <!-- 「가격」 칸 없음 — 대표 9/23 보류(월 구독 검토 중). 가격 구조가 정해지면 프로토타입 §4 4번 칸을 되살린다 -->
+
+    <section class="together" aria-labelledby="together-title">
+      <p class="section-kicker">이미 쓰고 계신가요</p>
+      <h2 id="together-title">같이 만들어가요</h2>
+      <nav class="rows">
+        <a class="row" href="https://docs.google.com/forms/d/e/1FAIpQLSfKwbEwBjkEZrDXp4shOHk9PxiJHLWXNeMuMZbXjQfdczfKag/viewform">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M4 7l8 6 8-6"/></svg>
+          <span>의견 보내기<small>불편한 점, 바라는 기능을 알려주세요</small></span><i aria-hidden="true">›</i></a>
+        <a class="row" href="https://docs.google.com/forms/d/e/1FAIpQLScI67KNXVCzmYk4TNnFsvq0hQWkgr1yYVcMwBeSz7saRaQtmg/viewform">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19l1-4 10-10 3 3-10 10-4 1z"/><path d="M14 7l3 3"/></svg>
+          <span>오늘의 주제 제안하기<small>채택되면 앱에서 만날 수 있어요</small></span><i aria-hidden="true">›</i></a>
+        <a class="row" href="https://www.instagram.com/nakseojangssi/">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6"/></svg>
+          <span>인스타그램<small>@nakseojangssi</small></span><i aria-hidden="true">›</i></a>
+        <!-- 📌 「매일」은 대표가 9/30까지 예약해 둔 동안 참이다 — 10/1 방아쇠(설계서 §9): 연장 안 하면 이 문구를 바꾼다 -->
+        <a class="row" href="https://www.threads.com/@nakseojangssi">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-8l-4 3.5v-3.5H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z"/></svg>
+          <span>스레드<small>매일 오늘의 주제 한 문장</small></span><i aria-hidden="true">›</i></a>
+      </nav>
+    </section>
+
+    <section class="help" id="help" aria-labelledby="help-title">
+      <div class="help-grid">
+        <div>
+          <p class="section-kicker">도움말</p>
+          <h2 id="help-title">자주 묻는 것들</h2>
+        </div>
+        <div>
+          <details><summary>회원가입이 필요한가요?</summary>
+            <p>아니요. 열자마자 바로 쓸 수 있어요.</p></details>
+          <details><summary>쉼표는 어떻게 생기나요?</summary>
+            <p>매일 쓰면 7일마다 하나씩 생기고, 두 개까지 모아둘 수 있어요. 하루쯤 건너뛴 날은 쉼표가 기록을 대신 이어줘요.</p></details>
+          <!-- 휴대폰 교체 (대표 확정 10/2 — 기록·프리미엄 두 문답, 정본 = 앱 리포 docs/site-faq/phone-switch-block.html)
+               순서 = 덮어쓰기 함정(개발 9/24) · OS 간 = 코드 근거(fea9df7) · 스토어 간 프리미엄 = 익명 결제(revenuecat.ts:68) ·
+               주의 문장 = 1.6.2 partial 에도 마지막 백업 날짜가 바뀜(SettingsScreen.tsx:195) -->
+          <details><summary>휴대폰을 바꾸면 기록은요?</summary>
+            <p>구글 드라이브 백업으로 글과 사진을 새 휴대폰에 옮길 수 있어요. <b>순서가 중요해요.</b></p>
+            <ol>
+              <li><b>쓰던 휴대폰에서 먼저</b> 설정 › 백업 및 복원 › <b>구글 드라이브에 백업</b>을 눌러 주세요. <b>마지막 백업</b> 날짜가 오늘로 바뀌었는지 확인해 주세요.</li>
+              <li><b>새 휴대폰</b>에 낙서장씨를 설치하고, <b>글을 쓰기 전에</b> 설정 › 백업 및 복원 › <b>드라이브에서 복원</b>을 눌러 주세요. 로그인할 때 쓰던 휴대폰과 같은 구글 계정을 골라 주세요.</li>
+              <li>복원이 끝나면 새 휴대폰에서 이어 쓰면 돼요.</li>
+            </ol>
+            <p>복원 전에 새 휴대폰에서 글을 쓰고 백업하면 드라이브에 있던 기록이 지워질 수 있어요. 쓰던 휴대폰을 초기화하거나 앱을 지우는 건 새 휴대폰에서 글과 사진이 다 보이는지 확인한 뒤에 해 주세요.</p>
+            <p>iPhone과 Android 사이에서도 같은 순서로 옮길 수 있어요.</p></details>
+          <details><summary>휴대폰을 바꾸면 프리미엄은요?</summary>
+            <p>같은 스토어 안에서는 돌아와요. iPhone에서는 설정 › 프리미엄 화면 아래 <b>구매 복원</b>을 눌러 주세요. Android에서는 같은 구글 계정이면 그대로 돌아와요.</p>
+            <p>구매는 App Store와 Google Play에 따로 남아서, iPhone과 Android를 오가면 프리미엄은 넘어가지 않아요. 옮긴 글과 사진은 그대로 보이고, 프리미엄 기능을 이어 쓰려면 새 휴대폰에서 다시 구매해야 해요.</p></details>
+          <!-- 「프리미엄은 구독인가요?」 문답 없음 — 대표 9/23 보류(가격 칸과 같은 이유) -->
+          <details><summary>광고는 언제 나오나요?</summary>
+            <p>직접 고를 때만 나와요. 며칠에 한 번, 글을 저장하고 나면 광고를 보고 쉼표를 받을지 물어요. 넘기면 광고는 나오지 않아요.</p></details>
+          <details><summary>기록을 지우려면요?</summary>
+            <p>앱을 삭제하면 휴대폰에 저장된 기록이 함께 지워져요. 드라이브 백업은 구글 드라이브 설정의 앱 관리에서 지울 수 있어요.</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="comma" aria-hidden="true">,</div>
+    <p class="line">낙서장씨 — 하루 한 줄 일기</p>
+    <p class="links"><a class="textlink" href="/privacy-policy.html">개인정보처리방침</a>
+      <a class="textlink" href="mailto:circleocompany@gmail.com">circleocompany@gmail.com</a></p>
+    <!-- 사업자 정보 표기는 보류(§11, 대표) — 현행 사이트의 한 줄 그대로 -->
+    <p class="biz">만든 곳: W.H. Studio</p>
+  </footer>
+</div>
+
+<script>
+  /* 🚨 인스타·페이스북 인앱 브라우저는 유니버설 링크에 필요한 API 를 구현하지 않는다.
+     그래서 App Store 링크를 **탭해도 아무 일도 안 일어난다** (2026-08-02 대표 실측).
+     경유 페이지·스크립트 이동·x-safari-https 전부 막힌 것을 확인했고, 우리가 고칠 수
+     있는 자리가 아니다 → 빠져나가는 법을 알려주는 것이 유일한 수단이다.
+     🔑 길게 눌러 [링크 열기] 는 **실제로 App Store 앱까지 열린다**(실측). 인스타가
+     가로채는 것은 주소가 아니라 "링크를 눌렀다"는 사건이고, 웹뷰 자체 메뉴는 그 검문을
+     지나지 않기 때문이다.
+     🚨 **iOS 에서만 띄운다** (2026-08-03). 안드로이드 인스타는 열린다(대표 안드폰 실측) — 안드에 경고를 붙이면 없는 문제를 만든다.
+     ✅ **스레드는 전부 열린다** (2026-08-03 대표 실측) — UA 검사에 Threads 를 넣지 말 것.
+     🔄 **2026-09-23 대표 실측 — 아이폰 인스타 앱 안에서 App Store 배지 탭 → 바로 열렸다** (8/2 와 반대. 인스타 웹뷰가 바뀐 것으로 보인다).
+        그래서 첫 문장을 단정형(「바로 열리지 않아요」)에서 **조건형(「링크가 열리지 않으면」)** 으로 바꿨다 — 열리는 사람에게 틀린 말을 안 한다.
+        표시 조건(iOS+인스타 UA)은 그대로: 여전히 안 열리는 기기·버전이 있을 수 있고, 조건형이라 열려도 무해하다. */
+  try {
+    var ua = navigator.userAgent;
+    if (/Instagram/i.test(ua) && /iPhone|iPad|iPod/i.test(ua)) {
+      document.getElementById('iabNote').hidden = false;
+    }
+  } catch (e) {}
+</script>
+<script>
+  /* 🆕 메타 광고 도착 페이지 — App Store 단추만 ASC 캠페인 링크로 바꾼다(개발 발주 21).
+     주소의 ct 가 아래 표에 있을 때만 바꾸고, 없거나 낯설면 첫 화면과 같은 링크 그대로 둔다(그 다운로드는 캠페인으로 안 셈).
+     링크 = ASC 캠페인 링크 생성기 값(앱 리포 docs/paid-marketing-3.md §8-7 · 제공자 토큰 129181180) — 글자를 바꾸지 말 것.
+     메타가 붙이는 fbclid 같은 다른 값은 그대로 두고 ct 하나만 읽는다. */
+  try {
+    var CAMPAIGN_LINKS = {
+      'meta-r1': 'https://apps.apple.com/app/apple-store/id6791676098?pt=129181180&ct=meta-r1&mt=8',
+      'meta-r2': 'https://apps.apple.com/app/apple-store/id6791676098?pt=129181180&ct=meta-r2&mt=8'
+    };
+    var m = /[?&]ct=([^&#]*)/.exec(location.search);
+    var ct = m ? decodeURIComponent(m[1]) : '';
+    if (Object.prototype.hasOwnProperty.call(CAMPAIGN_LINKS, ct)) {
+      document.getElementById('appStoreLink').href = CAMPAIGN_LINKS[ct];
+    }
+  } catch (e) {}
+</script>
+</body>
+</html>
